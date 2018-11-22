@@ -225,8 +225,7 @@ static int get_video_buffer(AVFrame *frame, int align)
             align = 32; /* STRIDE_ALIGN. Should be av_cpu_max_align() */
 
         for(i=1; i<=align; i+=i) {
-            ret = av_image_fill_linesizes(frame->linesize, frame->format,
-                                          FFALIGN(frame->width, i));
+            ret = av_image_fill_linesizes(frame->linesize, frame->format, FFALIGN(frame->width, i));
             if (ret < 0)
                 return ret;
             if (!(frame->linesize[0] & (align-1)))
@@ -238,8 +237,7 @@ static int get_video_buffer(AVFrame *frame, int align)
     }
 
     padded_height = FFALIGN(frame->height, 32);
-    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height,
-                                      NULL, frame->linesize)) < 0)
+    if ((ret = av_image_fill_pointers(frame->data, frame->format, padded_height, NULL, frame->linesize)) < 0)
         return ret;
 
     frame->buf[0] = av_buffer_alloc(ret + 4*plane_padding);
@@ -561,8 +559,10 @@ void av_frame_unref(AVFrame *frame)
 
     for (i = 0; i < FF_ARRAY_ELEMS(frame->buf); i++)
         av_buffer_unref(&frame->buf[i]);
+    
     for (i = 0; i < frame->nb_extended_buf; i++)
         av_buffer_unref(&frame->extended_buf[i]);
+    
     av_freep(&frame->extended_buf);
     av_dict_free(&frame->metadata);
 #if FF_API_FRAME_QP

@@ -882,8 +882,7 @@ static int mpegts_init(AVFormatContext *s)
         } else if (st->id < 0x1FFF) {
             ts_st->pid = st->id;
         } else {
-            av_log(s, AV_LOG_ERROR,
-                   "Invalid stream id %d, must be less than 8191\n", st->id);
+            av_log(s, AV_LOG_ERROR, "Invalid stream id %d, must be less than 8191\n", st->id);
             ret = AVERROR(EINVAL);
             goto fail;
         }
@@ -906,22 +905,18 @@ static int mpegts_init(AVFormatContext *s)
         ts_st->cc              = 15;
         ts_st->discontinuity   = ts->flags & MPEGTS_FLAG_DISCONT;
         /* update PCR pid by using the first video stream */
-        if (st->codecpar->codec_type == AVMEDIA_TYPE_VIDEO &&
-            service->pcr_pid == 0x1fff) {
+        if (st->codecpar->codec_type == AVMEDIA_TYPE_VIDEO && service->pcr_pid == 0x1fff) {
             service->pcr_pid = ts_st->pid;
             pcr_st           = st;
         }
-        if (st->codecpar->codec_id == AV_CODEC_ID_AAC &&
-            st->codecpar->extradata_size > 0) {
+        if (st->codecpar->codec_id == AV_CODEC_ID_AAC && st->codecpar->extradata_size > 0) {
             AVStream *ast;
             ts_st->amux = avformat_alloc_context();
             if (!ts_st->amux) {
                 ret = AVERROR(ENOMEM);
                 goto fail;
             }
-            ts_st->amux->oformat =
-                av_guess_format((ts->flags & MPEGTS_FLAG_AAC_LATM) ? "latm" : "adts",
-                                NULL, NULL);
+            ts_st->amux->oformat = av_guess_format((ts->flags & MPEGTS_FLAG_AAC_LATM) ? "latm" : "adts", NULL, NULL);
             if (!ts_st->amux->oformat) {
                 ret = AVERROR(EINVAL);
                 goto fail;
@@ -954,12 +949,9 @@ static int mpegts_init(AVFormatContext *s)
         ts_st = pcr_st->priv_data;
 
     if (ts->mux_rate > 1) {
-        service->pcr_packet_period = (int64_t)ts->mux_rate * ts->pcr_period /
-                                     (TS_PACKET_SIZE * 8 * 1000);
-        ts->sdt_packet_period      = (int64_t)ts->mux_rate * SDT_RETRANS_TIME /
-                                     (TS_PACKET_SIZE * 8 * 1000);
-        ts->pat_packet_period      = (int64_t)ts->mux_rate * PAT_RETRANS_TIME /
-                                     (TS_PACKET_SIZE * 8 * 1000);
+        service->pcr_packet_period = (int64_t)ts->mux_rate * ts->pcr_period / (TS_PACKET_SIZE * 8 * 1000);
+        ts->sdt_packet_period      = (int64_t)ts->mux_rate * SDT_RETRANS_TIME / (TS_PACKET_SIZE * 8 * 1000);
+        ts->pat_packet_period      = (int64_t)ts->mux_rate * PAT_RETRANS_TIME / (TS_PACKET_SIZE * 8 * 1000);
 
         if (ts->copyts < 1)
             ts->first_pcr = av_rescale(s->max_delay, PCR_TIME_BASE, AV_TIME_BASE);
@@ -980,8 +972,7 @@ static int mpegts_init(AVFormatContext *s)
         } else {
             // max delta PCR 0.1s
             // TODO: should be avg_frame_rate
-            service->pcr_packet_period =
-                ts_st->user_tb.den / (10 * ts_st->user_tb.num);
+            service->pcr_packet_period = ts_st->user_tb.den / (10 * ts_st->user_tb.num);
         }
         if (!service->pcr_packet_period)
             service->pcr_packet_period = 1;

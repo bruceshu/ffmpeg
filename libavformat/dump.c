@@ -110,8 +110,7 @@ void av_pkt_dump2(FILE *f, const AVPacket *pkt, int dump_payload, const AVStream
     pkt_dump_internal(NULL, f, 0, pkt, dump_payload, st->time_base);
 }
 
-void av_pkt_dump_log2(void *avcl, int level, const AVPacket *pkt, int dump_payload,
-                      const AVStream *st)
+void av_pkt_dump_log2(void *avcl, int level, const AVPacket *pkt, int dump_payload, const AVStream *st)
 {
     pkt_dump_internal(avcl, NULL, level, pkt, dump_payload, st->time_base);
 }
@@ -450,8 +449,7 @@ static void dump_sidedata(void *ctx, AVStream *st, const char *indent)
 }
 
 /* "user interface" functions */
-static void dump_stream_format(AVFormatContext *ic, int i,
-                               int index, int is_output)
+static void dump_stream_format(AVFormatContext *ic, int i, int index, int is_output)
 {
     char buf[256];
     int flags = (is_output ? ic->oformat->flags : ic->iformat->flags);
@@ -490,10 +488,11 @@ static void dump_stream_format(AVFormatContext *ic, int i,
     /* XXX: add a generic system */
     if (flags & AVFMT_SHOW_IDS)
         av_log(NULL, AV_LOG_INFO, "[0x%x]", st->id);
+    
     if (lang)
         av_log(NULL, AV_LOG_INFO, "(%s)", lang->value);
-    av_log(NULL, AV_LOG_DEBUG, ", %d, %d/%d", st->codec_info_nb_frames,
-           st->time_base.num, st->time_base.den);
+    
+    av_log(NULL, AV_LOG_DEBUG, ", %d, %d/%d", st->codec_info_nb_frames, st->time_base.num, st->time_base.den);
     av_log(NULL, AV_LOG_INFO, ": %s", buf);
 
     if (st->sample_aspect_ratio.num &&
@@ -586,8 +585,7 @@ void av_dump_format(AVFormatContext *ic, int index,
             secs %= 60;
             hours = mins / 60;
             mins %= 60;
-            av_log(NULL, AV_LOG_INFO, "%02d:%02d:%02d.%02d", hours, mins, secs,
-                   (100 * us) / AV_TIME_BASE);
+            av_log(NULL, AV_LOG_INFO, "%02d:%02d:%02d.%02d", hours, mins, secs, (100 * us) / AV_TIME_BASE);
         } else {
             av_log(NULL, AV_LOG_INFO, "N/A");
         }
@@ -623,14 +621,11 @@ void av_dump_format(AVFormatContext *ic, int index,
     if (ic->nb_programs) {
         int j, k, total = 0;
         for (j = 0; j < ic->nb_programs; j++) {
-            AVDictionaryEntry *name = av_dict_get(ic->programs[j]->metadata,
-                                                  "name", NULL, 0);
-            av_log(NULL, AV_LOG_INFO, "  Program %d %s\n", ic->programs[j]->id,
-                   name ? name->value : "");
+            AVDictionaryEntry *name = av_dict_get(ic->programs[j]->metadata, "name", NULL, 0);
+            av_log(NULL, AV_LOG_INFO, "  Program %d %s\n", ic->programs[j]->id, name ? name->value : "");
             dump_metadata(NULL, ic->programs[j]->metadata, "    ");
             for (k = 0; k < ic->programs[j]->nb_stream_indexes; k++) {
-                dump_stream_format(ic, ic->programs[j]->stream_index[k],
-                                   index, is_output);
+                dump_stream_format(ic, ic->programs[j]->stream_index[k], index, is_output);
                 printed[ic->programs[j]->stream_index[k]] = 1;
             }
             total += ic->programs[j]->nb_stream_indexes;

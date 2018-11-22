@@ -196,8 +196,7 @@ int av_bsf_send_packet(AVBSFContext *ctx, AVPacket *pkt)
         return AVERROR(EINVAL);
     }
 
-    if (ctx->internal->buffer_pkt->data ||
-        ctx->internal->buffer_pkt->side_data_elems)
+    if (ctx->internal->buffer_pkt->data || ctx->internal->buffer_pkt->side_data_elems)
         return AVERROR(EAGAIN);
 
     ret = av_packet_make_refcounted(pkt);

@@ -48,8 +48,7 @@ int av_match_ext(const char *filename, const char *extensions)
     return 0;
 }
 
-AVOutputFormat *av_guess_format(const char *short_name, const char *filename,
-                                const char *mime_type)
+AVOutputFormat *av_guess_format(const char *short_name, const char *filename, const char *mime_type)
 {
     const AVOutputFormat *fmt = NULL;
     AVOutputFormat *fmt_found = NULL;

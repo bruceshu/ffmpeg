@@ -415,14 +415,12 @@ int parse_optgroup(void *optctx, OptionGroup *g)
 {
     int i, ret;
 
-    av_log(NULL, AV_LOG_DEBUG, "Parsing a group of options: %s %s.\n",
-           g->group_def->name, g->arg);
+    av_log(NULL, AV_LOG_DEBUG, "Parsing a group of options: %s %s.\n", g->group_def->name, g->arg);
 
     for (i = 0; i < g->nb_opts; i++) {
         Option *o = &g->opts[i];
 
-        if (g->group_def->flags &&
-            !(g->group_def->flags & o->opt->flags)) {
+        if (g->group_def->flags && !(g->group_def->flags & o->opt->flags)) {
             av_log(NULL, AV_LOG_ERROR, "Option %s (%s) cannot be applied to "
                    "%s %s -- you are trying to apply an input option to an "
                    "output file or vice versa. Move this option before the "
@@ -659,8 +657,7 @@ static int match_group_separator(const OptionGroupDef *groups, int nb_groups,
  * @param group_idx which group definition should this group belong to
  * @param arg argument of the group delimiting option
  */
-static void finish_group(OptionParseContext *octx, int group_idx,
-                         const char *arg)
+static void finish_group(OptionParseContext *octx, int group_idx, const char *arg)
 {
     OptionGroupList *l = &octx->groups[group_idx];
     OptionGroup *g;
@@ -690,8 +687,7 @@ static void finish_group(OptionParseContext *octx, int group_idx,
 /*
  * Add an option instance to currently parsed group.
  */
-static void add_opt(OptionParseContext *octx, const OptionDef *opt,
-                    const char *key, const char *val)
+static void add_opt(OptionParseContext *octx, const OptionDef *opt, const char *key, const char *val)
 {
     int global = !(opt->flags & (OPT_PERFILE | OPT_SPEC | OPT_OFFSET));
     OptionGroup *g = global ? &octx->global_opts : &octx->cur_group;
@@ -702,8 +698,7 @@ static void add_opt(OptionParseContext *octx, const OptionDef *opt,
     g->opts[g->nb_opts - 1].val = val;
 }
 
-static void init_parse_context(OptionParseContext *octx,
-                               const OptionGroupDef *groups, int nb_groups)
+static void init_parse_context(OptionParseContext *octx, const OptionGroupDef *groups, int nb_groups)
 {
     static const OptionGroupDef global_group = { "global" };
     int i;
@@ -795,8 +790,7 @@ do {                                                                           \
         if ((ret = match_group_separator(groups, nb_groups, opt)) >= 0) {
             GET_ARG(arg);
             finish_group(octx, ret, arg);
-            av_log(NULL, AV_LOG_DEBUG, " matched as %s with argument '%s'.\n",
-                   groups[ret].name, arg);
+            av_log(NULL, AV_LOG_DEBUG, " matched as %s with argument '%s'.\n", groups[ret].name, arg);
             continue;
         }
 
@@ -848,8 +842,7 @@ do {                                                                           \
     }
 
     if (octx->cur_group.nb_opts || codec_opts || format_opts || resample_opts)
-        av_log(NULL, AV_LOG_WARNING, "Trailing options were found on the "
-               "commandline.\n");
+        av_log(NULL, AV_LOG_WARNING, "Trailing options were found on the commandline.\n");
 
     av_log(NULL, AV_LOG_DEBUG, "Finished splitting the commandline.\n");
 
